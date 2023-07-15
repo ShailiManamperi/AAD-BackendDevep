@@ -1,4 +1,4 @@
-package lk.ijse.backend.webhandler.Controller;
+package lk.ijse.backend.Controller;
 
 
 import jakarta.json.bind.Jsonb;
@@ -8,12 +8,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.backend.webhandler.DTO.StudentDTO;
+import lk.ijse.backend.DTO.StudentDTO;
 
 import java.io.IOException;
 import java.sql.*;
 
-@WebServlet(urlPatterns = "/student", loadOnStartup = 1)
+@WebServlet(urlPatterns = "/student")
 public class student extends HttpServlet {
     private Connection con;
 

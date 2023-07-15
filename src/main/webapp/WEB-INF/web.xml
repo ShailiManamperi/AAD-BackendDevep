@@ -19,6 +19,13 @@
         <param-name>mysql-driver</param-name>
         <param-value>com.mysql.cj.jdbc.Driver</param-value>
     </context-param>
-
+<!--<servlet>-->
+<!--    <servlet-name>test</servlet-name>-->
+<!--    <servlet-class>Controller.lk.ijse.backend.student</servlet-class>-->
+<!--</servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>test</servlet-name>-->
+<!--        <url-pattern>/student</url-pattern>-->
+<!--    </servlet-mapping>-->
 
 </web-app>

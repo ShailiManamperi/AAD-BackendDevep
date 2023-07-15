@@ -1,4 +1,4 @@
-package lk.ijse.backend.webhandler.DTO;
+package lk.ijse.backend.DTO;
 
 import java.io.Serializable;
 
