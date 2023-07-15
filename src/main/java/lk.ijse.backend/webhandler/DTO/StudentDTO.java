@@ -3,7 +3,7 @@ package lk.ijse.backend.webhandler.DTO;
 import java.io.Serializable;
 
 public class StudentDTO implements Serializable {
-    private String Id;
+    private int Id;
     private String name;
     private String city;
     private String email;
@@ -12,7 +12,7 @@ public class StudentDTO implements Serializable {
     public StudentDTO() {
     }
 
-    public StudentDTO(String id,String name, String city, String email, int level) {
+    public StudentDTO(int id,String name, String city, String email, int level) {
         this.Id=id;
         this.name = name;
         this.city = city;
@@ -20,11 +20,11 @@ public class StudentDTO implements Serializable {
         this.level = level;
     }
 
-    public String getId() {
+    public int getId() {
         return Id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         Id = id;
     }
 
