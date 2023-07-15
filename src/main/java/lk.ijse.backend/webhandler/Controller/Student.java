@@ -13,6 +13,7 @@ import lk.ijse.backend.webhandler.DTO.StudentDTO;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 @WebServlet(urlPatterns = "/student")
 public class Student extends HttpServlet {
@@ -37,20 +38,25 @@ public class Student extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
         try{
+            Jsonb jsonb = JsonbBuilder.create();
+            StudentDTO studentObj = jsonb.fromJson(req.getReader(), StudentDTO.class);
+            //validation
+            if (studentObj.getName() == null || studentObj.getName().matches("[A-Za-z]+")) {
+                throw new RuntimeException("Invalid Name");
+            } else if (studentObj.getCity() == null || studentObj.getCity().matches("[A-Za-z]+")) {
+                throw new RuntimeException("Invalid City");
+            } else if (studentObj.getEmail() == null || studentObj.getEmail().matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
+                throw new RuntimeException("Invalid Email");
+            } else if (studentObj.getLevel() <= 0) {
+                throw new RuntimeException("Invalid Level");
+            }
+            PreparedStatement ps = con.prepareStatement("");
+            ps.setInt(1,studentObj.getId());
+
+        }catch{
 
         }
-        Jsonb jsonb = JsonbBuilder.create();
-        StudentDTO studentObj = jsonb.fromJson(req.getReader(), StudentDTO.class);
-        //validation
-        if (studentObj.getName() == null || studentObj.getName().matches("[A-Za-z]+")) {
-            throw new RuntimeException("Invalid Name");
-        } else if (studentObj.getCity() == null || studentObj.getCity().matches("[A-Za-z]+")) {
-            throw new RuntimeException("Invalid City");
-        } else if (studentObj.getEmail() == null || studentObj.getEmail().matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
-            throw new RuntimeException("Invalid Email");
-        } else if (studentObj.getLevel() <= 0) {
-            throw new RuntimeException("Invalid Level");
-        }
+
 
     }
 }
