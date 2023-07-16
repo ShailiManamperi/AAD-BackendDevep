@@ -45,40 +45,43 @@ public class Student extends HttpServlet {
         Jsonb jsonb = JsonbBuilder.create();
         StudentDTO studentObj = jsonb.fromJson(req.getReader(), StudentDTO.class);
         //validation
-        if (studentObj.getName() == null || studentObj.getName().matches("[A-Za-z]+")) {
-            throw new RuntimeException("Invalid Name");
-        } else if (studentObj.getCity() == null || studentObj.getCity().matches("[A-Za-z]+")) {
-            throw new RuntimeException("Invalid City");
-        } else if (studentObj.getEmail() == null || studentObj.getEmail().matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
-            throw new RuntimeException("Invalid Email");
-        } else if (studentObj.getLevel() <= 0) {
-            throw new RuntimeException("Invalid Level");
-        }
+        if (studentObj.getName() == null || studentObj.getName().matches("[A-Za-z]+")){
+            if (studentObj.getCity() == null || studentObj.getCity().matches("[A-Za-z]+")){
+                if (studentObj.getEmail() == null || studentObj.getEmail().matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")){
+                    if (studentObj.getLevel() >= 0){
+                        //db management
+                        try {
+                            PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES(?,?,?,?,?)");
+                            ps.setInt(1,studentObj.getId());
+                            ps.setString(2,studentObj.getName());
+                            ps.setString(3,studentObj.getCity());
+                            ps.setString(4,studentObj.getEmail());
+                            ps.setInt(5,studentObj.getLevel());
 
-        //db management
-        try {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES(?,?,?,?,?)");
-            ps.setInt(1,studentObj.getId());
-            ps.setString(2,studentObj.getName());
-            ps.setString(3,studentObj.getCity());
-            ps.setString(4,studentObj.getEmail());
-            ps.setInt(5,studentObj.getLevel());
+                            if(ps.executeUpdate() != 1){
+                                throw new RuntimeException("Save Failed");
+                            }
 
-            if(ps.executeUpdate() != 1){
-                throw new RuntimeException("Save Failed");
+                            ResultSet rst = ps.getGeneratedKeys();
+                            rst.next();
+                            resp.setStatus(HttpServletResponse.SC_CREATED);
+                            //the created json is sent to frontend
+                            resp.setContentType("application/json");
+                            jsonb.toJson(studentObj,resp.getWriter());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        throw new RuntimeException("Invalid Level");
+                    }
+                }else {
+                    throw new RuntimeException("Invalid Email");
+                }
+            }else {
+                throw new RuntimeException("Invalid City");
             }
-
-            ResultSet rst = ps.getGeneratedKeys();
-            rst.next();
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            //the created json is sent to frontend
-            resp.setContentType("application/json");
-            jsonb.toJson(studentObj,resp.getWriter());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }else {
+            throw new RuntimeException("Invalid Name");
         }
-
-
-
     }
 }
