@@ -1,13 +1,5 @@
 package lk.ijse.backend.Controller;
 
-
-//import jakarta.json.bind.Jsonb;
-//import jakarta.json.bind.JsonbBuilder;
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.annotation.WebServlet;
-//import jakarta.servlet.http.HttpServlet;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lk.ijse.backend.DTO.StudentDTO;
@@ -23,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.*;
 
-@WebServlet(urlPatterns = "/stu")
+
 public class Student extends HttpServlet {
     private Connection con;
 
@@ -38,6 +30,11 @@ public class Student extends HttpServlet {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("found");
     }
 
     @Override
