@@ -20,4 +20,19 @@ public class StudentModel {
 
         return i;
     }
+
+    public static int UpdateStudent(StudentDTO studentDTO, Connection con) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("");
+        ps.setInt(1,studentDTO.getId());
+        ps.setString(2,studentDTO.getName());
+        ps.setString(3,studentDTO.getCity());
+        ps.setString(4,studentDTO.getEmail());
+        ps.setInt(5,studentDTO.getLevel());
+
+        int i = ps.executeUpdate();
+        ResultSet rst = ps.getGeneratedKeys();
+        rst.next();
+
+        return i;
+    }
 }
