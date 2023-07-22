@@ -50,7 +50,7 @@ public class Student extends HttpServlet {
                     if (studentObj.getLevel() >= 0){
                         //db management
                         try {
-                            PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES(?,?,?,?,?)");
+                            PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
                             ps.setInt(1,studentObj.getId());
                             ps.setString(2,studentObj.getName());
                             ps.setString(3,studentObj.getCity());
