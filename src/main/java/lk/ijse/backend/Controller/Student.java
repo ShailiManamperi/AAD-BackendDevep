@@ -3,6 +3,8 @@ package lk.ijse.backend.Controller;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lk.ijse.backend.DTO.StudentDTO;
+import lk.ijse.backend.model.StudentModel;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,19 +52,25 @@ public class Student extends HttpServlet {
                     if (studentObj.getLevel() >= 0){
                         //db management
                         try {
-                            PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-                            ps.setInt(1,studentObj.getId());
-                            ps.setString(2,studentObj.getName());
-                            ps.setString(3,studentObj.getCity());
-                            ps.setString(4,studentObj.getEmail());
-                            ps.setInt(5,studentObj.getLevel());
-
-                            if(ps.executeUpdate() != 1){
-                                throw new RuntimeException("Save Failed");
+//                            PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+//                            ps.setInt(1,studentObj.getId());
+//                            ps.setString(2,studentObj.getName());
+//                            ps.setString(3,studentObj.getCity());
+//                            ps.setString(4,studentObj.getEmail());
+//                            ps.setInt(5,studentObj.getLevel());
+//
+//                            if(ps.executeUpdate() != 1){
+//                                throw new RuntimeException("Save Failed");
+//                            }
+//
+//                            ResultSet rst = ps.getGeneratedKeys();
+//                            rst.next();
+                            int i = StudentModel.SaveStudent(studentObj, con);
+                            if (i !=1){
+                                throw new RuntimeException("save failed");
+                            }else {
+                                System.out.println("saved sucessfully");
                             }
-
-                            ResultSet rst = ps.getGeneratedKeys();
-                            rst.next();
                             resp.setStatus(HttpServletResponse.SC_CREATED);
                             //the created json is sent to frontend
                             resp.setContentType("application/json");
