@@ -3,6 +3,7 @@ package lk.ijse.backend.Controller;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lk.ijse.backend.DTO.StudentDTO;
+import lk.ijse.backend.Validation.StudentValidation;
 import lk.ijse.backend.model.StudentModel;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.*;
+import javafx.scene.control.*;
 
 
 public class Student extends HttpServlet {
@@ -46,49 +48,23 @@ public class Student extends HttpServlet {
         Jsonb jsonb = JsonbBuilder.create();
         StudentDTO studentObj = jsonb.fromJson(req.getReader(), StudentDTO.class);
         //validation
-        if (studentObj.getName() == null || studentObj.getName().matches("[A-Za-z]+")){
-            if (studentObj.getCity() == null || studentObj.getCity().matches("[A-Za-z]+")){
-                if (studentObj.getEmail() == null || studentObj.getEmail().matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")){
-                    if (studentObj.getLevel() >= 0){
-                        //db management
-                        try {
-//                            PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-//                            ps.setInt(1,studentObj.getId());
-//                            ps.setString(2,studentObj.getName());
-//                            ps.setString(3,studentObj.getCity());
-//                            ps.setString(4,studentObj.getEmail());
-//                            ps.setInt(5,studentObj.getLevel());
-//
-//                            if(ps.executeUpdate() != 1){
-//                                throw new RuntimeException("Save Failed");
-//                            }
-//
-//                            ResultSet rst = ps.getGeneratedKeys();
-//                            rst.next();
-                            int i = StudentModel.SaveStudent(studentObj, con);
-                            if (i !=1){
-                                throw new RuntimeException("save failed");
-                            }else {
-                                System.out.println("saved sucessfully");
-                            }
-                            resp.setStatus(HttpServletResponse.SC_CREATED);
-                            //the created json is sent to frontend
-                            resp.setContentType("application/json");
-                            jsonb.toJson(studentObj,resp.getWriter());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                    }else{
-                        throw new RuntimeException("Invalid Level");
-                    }
+        boolean b = StudentValidation.studentValidation(studentObj);
+        if (b){
+            try {
+                //dbmangement
+                int i = StudentModel.SaveStudent(studentObj, con);
+                if (i !=1){
+                    throw new RuntimeException("save failed");
                 }else {
-                    throw new RuntimeException("Invalid Email");
+                    System.out.println("saved sucessfully");
                 }
-            }else {
-                throw new RuntimeException("Invalid City");
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                //the created json is sent to frontend
+                resp.setContentType("application/json");
+                jsonb.toJson(studentObj,resp.getWriter());
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        }else {
-            throw new RuntimeException("Invalid Name");
         }
     }
 }
